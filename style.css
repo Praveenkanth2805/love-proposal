@@ -1,0 +1,101 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    /* Soft pastel background instead of bright gradient */
+    background: linear-gradient(135deg, #ffe6f0, #fff0f5, #e0ffff, #f0fff0);
+    height: 100vh;
+    margin: 0;
+}
+
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+.big {
+    width: 320px;
+}
+
+h1 {
+    color: #ff3366;
+}
+
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+button {
+    padding: 10px 25px;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.yes {
+    background: #ff3366;
+    color: white;
+}
+
+.no {
+    background: #ddd;
+}
+
+.btn-group {
+    margin-top: 20px;
+}
+
+/* Popup */
+.popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-box {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    text-align: center;
+}
+/* Floating letters/hearts */
+.heart {
+    position: fixed;
+    font-size: 24px;
+    font-weight: bold;
+    color: red; /* will override with JS random color */
+    pointer-events: none;
+    animation: floatUp 3s linear forwards;
+    user-select: none;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-600px) scale(1.5);
+        opacity: 0;
+    }
+}
