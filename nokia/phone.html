@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nokia Music Player</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
+
+<style>
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 0;
+    background: radial-gradient(circle at 50% 25%, #262626 0%, #0a0a0a 65%);
+    font-family: "VT323", monospace;
+    user-select: none;
+}
+
+/* ---------------- NOKIA BODY ---------------- */
+
+.phone {
+    position: relative;
+    width: min(340px, 92vw);
+    padding: 14px 16px 22px;
+    border-radius: 46px / 54px;
+    background:
+        linear-gradient(160deg,
+            #4d6072 0%,
+            #2e3f4e 28%,
+            #1b2833 72%,
+            #121b23 100%);
+    box-shadow:
+        0 26px 55px rgba(0,0,0,.85),
+        0 0 0 2px #0b1015,
+        inset 0 2px 1px rgba(255,255,255,.16),
+        inset 0 -9px 20px rgba(0,0,0,.6);
+}
+
+.earpiece {
+    width: 66px;
+    height: 7px;
+    margin: 2px auto 9px;
+    border-radius: 4px;
+    background: repeating-linear-gradient(90deg,
+        #060a0e 0 2px,
+        #36434f 2px 4px);
+    box-shadow:
+        inset 0 1px 2px #000,
+        0 1px 0 rgba(255,255,255,.09);
+}
+
+.brand {
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    letter-spacing: 6px;
+    text-indent: 6px;
+    color: #cbd8e4;
+    margin-bottom: 10px;
+    text-shadow:
+        0 1px 0 #000,
+        0 -1px 0 rgba(255,255,255,.2);
+}
+
+/* ---------------- SCREEN ---------------- */
+
+.screen {
+    padding: 9px;
+    border-radius: 12px;
+    background: linear-gradient(#080d12, #131c24);
+    box-shadow:
+        inset 0 3px 8px rgba(0,0,0,.95),
+        0 1px 0 rgba(255,255,255,.1);
+}
+
+.lcd {
+    padding: 8px 10px 7px;
+    border-radius: 5px;
+    color: #1b2a0c;
+    background:
+        repeating-linear-gradient(0deg,
+            rgba(30,60,10,.10) 0 1px,
+            transparent 1px 3px),
+        linear-gradient(180deg, #bade7b, #a1c85b);
+    box-shadow:
+        inset 0 0 26px rgba(35,70,10,.45),
+        inset 0 2px 5px rgba(0,0,0,.25),
+        0 0 18px rgba(150,205,80,.22);
+    overflow: hidden;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 15px;
+    line-height: 1;
+    padding-bottom: 3px;
+    border-bottom: 2px solid rgba(27,42,12,.4);
+}
+
+.song-info {
+    margin: 7px 0 3px;
+}
+
+.song-title {
+    font-size: 21px;
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.artist {
+    font-size: 14px;
+    opacity: .7;
+    line-height: 1.1;
+}
+
+.lyrics-window {
+    height: 136px;
+    margin-top: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.lyrics {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 0;
+    padding-bottom: 12px;      /* last line-ku keezha konjam gap */
+    transform: translateY(0);
+    transition: transform .35s ease;
+}
+
+.line {
+    min-height: 34px;
+    padding: 4px 2px;
+    font-size: 18px;
+    line-height: 1.1;
+    opacity: .3;
+    transition:
+        opacity .25s ease,
+        color .25s ease,
+        text-shadow .25s ease;
+}
+
+.line.active {
+    opacity: 1;
+    font-weight: bold;
+}
+
+.line.color1 { color: #183d13; }
+.line.color2 { color: #704018; }
+
+.line.color1.active {
+    text-shadow:
+        0 0 4px rgba(24,61,19,.7),
+        0 0 9px rgba(24,61,19,.35);
+}
+
+.line.color2.active {
+    text-shadow:
+        0 0 4px rgba(112,64,24,.7),
+        0 0 9px rgba(112,64,24,.35);
+}
+
+.line:not(.color1):not(.color2) { color: #183d13; }
+
+.line:not(.color1):not(.color2).active {
+    text-shadow:
+        0 0 4px rgba(24,61,19,.7),
+        0 0 9px rgba(24,61,19,.35);
+}
+
+.progress {
+    height: 9px;
+    border: 2px solid #1b2a0c;
+    border-radius: 2px;
+    padding: 1px;
+    margin-top: 8px;
+}
+
+.progress-fill {
+    width: 0;
+    height: 100%;
+    background: #1b2a0c;
+}
+
+.time {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    line-height: 1.2;
+}
+
+.status {
+    text-align: center;
+    margin-top: 2px;
+    font-size: 13px;
+    opacity: .65;
+    line-height: 1.2;
+}
+
+/* ---------------- NAV PAD ---------------- */
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 13px 0 4px;
+}
+
+.nav-pad {
+    display: grid;
+    grid-template-columns: 34px 46px 34px;
+    grid-template-rows: 22px 34px 22px;
+    place-items: center;
+    padding: 5px 8px;
+    border-radius: 999px;
+    background: linear-gradient(180deg,
+        #dbe2e8 0%,
+        #a3aeb8 42%,
+        #6b757f 100%);
+    box-shadow:
+        inset 0 1px 1px rgba(255,255,255,.95),
+        inset 0 -2px 4px rgba(0,0,0,.45),
+        0 3px 7px rgba(0,0,0,.65);
+}
+
+.nav-btn {
+    width: 30px;
+    height: 20px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #27313a;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1;
+    cursor: pointer;
+    text-shadow: 0 1px 0 rgba(255,255,255,.65);
+    transition: transform .08s;
+}
+
+.nav-btn:active { transform: scale(.78); }
+
+.nav-up    { grid-column: 2; grid-row: 1; }
+.nav-left  { grid-column: 1; grid-row: 2; }
+.nav-right { grid-column: 3; grid-row: 2; }
+.nav-down  { grid-column: 2; grid-row: 3; }
+
+.nav-center {
+    grid-column: 2;
+    grid-row: 2;
+    width: 46px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 9px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: .5px;
+    color: #e6eef5;
+    background: linear-gradient(#5a6672, #2d3841);
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.35),
+        inset 0 -2px 3px rgba(0,0,0,.5),
+        0 2px 0 #1b232a;
+    transition: transform .08s, background .2s, box-shadow .2s;
+}
+
+.nav-center:active { transform: translateY(2px); }
+
+.nav-center.playing {
+    background: linear-gradient(#4fbb63, #1f7a33);
+    color: #ffffff;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.5),
+        inset 0 -2px 3px rgba(0,0,0,.35),
+        0 2px 0 #124420,
+        0 0 12px rgba(80,200,110,.6);
+}
+
+/* ---------------- CALL / END ---------------- */
+
+.call-btn {
+    width: 38px;
+    height: 30px;
+    padding: 0;
+    border: 0;
+    border-radius: 15px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1;
+    color: #eef4f8;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.38),
+        0 3px 0 rgba(0,0,0,.65);
+    transition: transform .08s;
+}
+
+.call-btn:active {
+    transform: translateY(2px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.call { background: linear-gradient(#42a34a, #1f6629); }
+.end  { background: linear-gradient(#c4453e, #7d221e); }
+
+/* ---------------- KEYPAD ---------------- */
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 11px;
+}
+
+.key {
+    height: 34px;
+    padding: 0;
+    border: 0;
+    border-radius: 9px 9px 13px 13px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(#6a7683, #3a444f);
+    color: #eaf0f6;
+    box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.38),
+        inset 0 -2px 3px rgba(0,0,0,.42),
+        0 2px 0 #12181e;
+    font-family: Arial, sans-serif;
+    transition: transform .06s;
+}
+
+.key:active {
+    transform: translateY(2px);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.15);
+}
+
+.key .num {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.key .sub {
+    font-size: 6.5px;
+    letter-spacing: .5px;
+    line-height: 1;
+    margin-top: 1px;
+    opacity: .75;
+}
+</style>
+</head>
+
+<body>
+
+<div class="phone">
+
+    <div class="earpiece"></div>
+    <div class="brand">NOKIA</div>
+
+    <div class="screen">
+        <div class="lcd">
+
+            <div class="top">
+                <span>♪ MUSIC</span>
+                <span>▰▰▰</span>
+            </div>
+
+            <div class="song-info">
+                <div class="song-title">Kalla Nikkiriye</div>
+                <div class="artist">Praveenkanth G</div>
+            </div>
+
+            <div class="lyrics-window" id="lyricsWindow">
+                <div class="lyrics" id="lyrics"></div>
+            </div>
+
+            <div class="progress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+
+            <div class="time">
+                <span id="currentTime">00:00</span>
+                <span id="duration">00:00</span>
+            </div>
+
+            <div class="status" id="status">STOPPED</div>
+
+        </div>
+    </div>
+
+    <!-- Navigation + Call/End -->
+    <div class="controls">
+
+        <button class="call-btn call" id="callBtn" title="Play from start">☎</button>
+
+        <div class="nav-pad">
+            <button class="nav-btn nav-up"    id="navUp">▲</button>
+            <button class="nav-btn nav-left"  id="navLeft">◀</button>
+            <button class="nav-center"        id="navOk">OK</button>
+            <button class="nav-btn nav-right" id="navRight">▶</button>
+            <button class="nav-btn nav-down"  id="navDown">▼</button>
+        </div>
+
+        <button class="call-btn end" id="endBtn" title="Stop">✕</button>
+
+    </div>
+
+    <!-- Keypad -->
+    <div class="keypad">
+        <button class="key"><span class="num">1</span><span class="sub">&nbsp;</span></button>
+        <button class="key"><span class="num">2</span><span class="sub">ABC</span></button>
+        <button class="key"><span class="num">3</span><span class="sub">DEF</span></button>
+
+        <button class="key"><span class="num">4</span><span class="sub">GHI</span></button>
+        <button class="key"><span class="num">5</span><span class="sub">JKL</span></button>
+        <button class="key"><span class="num">6</span><span class="sub">MNO</span></button>
+
+        <button class="key"><span class="num">7</span><span class="sub">PQRS</span></button>
+        <button class="key"><span class="num">8</span><span class="sub">TUV</span></button>
+        <button class="key"><span class="num">9</span><span class="sub">WXYZ</span></button>
+
+        <button class="key"><span class="num">*</span><span class="sub">+</span></button>
+        <button class="key"><span class="num">0</span><span class="sub">&nbsp;</span></button>
+        <button class="key"><span class="num">#</span><span class="sub">&nbsp;</span></button>
+    </div>
+
+</div>
+
+<audio id="audio" src="KallaNikkiriye.mp3"></audio>
+
+<script>
+const audio          = document.getElementById("audio");
+const lyricsBox      = document.getElementById("lyrics");
+const lyricsWindow   = document.getElementById("lyricsWindow");
+const progressFill   = document.getElementById("progressFill");
+const currentTimeText= document.getElementById("currentTime");
+const durationText   = document.getElementById("duration");
+const statusEl       = document.getElementById("status");
+
+const navOk    = document.getElementById("navOk");
+const navUp    = document.getElementById("navUp");
+const navDown  = document.getElementById("navDown");
+const navLeft  = document.getElementById("navLeft");
+const navRight = document.getElementById("navRight");
+const callBtn  = document.getElementById("callBtn");
+const endBtn   = document.getElementById("endBtn");
+
+const LYRICS_OFFSET = 1;
+
+const lyricsData = [
+    { time: 0,  text: "சிந்தூரி நீ சிந்தாமணி" },
+    { time: 5,  text: "சில்லாகி போனாலும் யாவும் நீயே" },
+    { time: 8,  text: "கல்லாழி நீ கண்ணின் மணி" },
+    { time: 13, text: "கல் மீதும் பூ பூக்கும்" },
+    { time: 14, text: "புல் வேட்கை நீயே" },
+    { time: 17, text: "வானம் நம்மல வாழ சொல்லுது", color: "color1" },
+    { time: 19, text: "வாடி சுந்தரியே", color: "color2" },
+    { time: 21, text: "கல்லா நிக்கிறியே ", color: "color2" },
+    { time: 23, text: "கல்லா நிக்கிறியே...", color: "color2" },
+    { time: 25, text: "ஊரும் சொல்லுது ஆறும் சொல்லுது", color: "color1" },
+    { time: 27, text: "வாடி சுந்தரியே", color: "color2" },
+    { time: 29, text: "கல்லா நிக்கிறியே ", color: "color2" },
+    { time: 31, text: "கல்லா நிக்கிறியே...", color: "color2" },
+];
+
+/* ---------------- helpers ---------------- */
+
+function formatTime(seconds) {
+    if (!Number.isFinite(seconds)) return "00:00";
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+}
+
+function renderLyrics() {
+    lyricsBox.innerHTML = "";
+
+    lyricsData.forEach((item, index) => {
+        const line = document.createElement("div");
+        line.className = "line";
+        if (item.color) line.classList.add(item.color);
+        line.textContent = item.text;
+        line.dataset.index = index;
+        lyricsBox.appendChild(line);
+    });
+}
+
+function getActiveIndex() {
+    const t = audio.currentTime - LYRICS_OFFSET;
+    let activeIndex = 0;
+
+    for (let i = 0; i < lyricsData.length; i++) {
+        if (t >= lyricsData[i].time) activeIndex = i;
+    }
+    return activeIndex;
+}
+
+/* --------------------------------------------------------------
+   FIX: real DOM position use panrom (fixed 34px illa).
+   So oru line 2 line-a wrap aanalum scroll correct-a irukum,
+   last line-um full-a theriyum.
+   -------------------------------------------------------------- */
+function updateLyrics() {
+    const activeIndex = getActiveIndex();
+    const lines = lyricsBox.children;
+
+    for (let i = 0; i < lines.length; i++) {
+        lines[i].classList.toggle("active", i === activeIndex);
+    }
+
+    const activeEl = lines[activeIndex];
+    if (!activeEl) return;
+
+    const windowHeight = lyricsWindow.clientHeight;
+    const contentHeight = lyricsBox.offsetHeight;   // real height (wrap included)
+
+    // Active line-a window-oda ~42% height-la vaikkrom
+    let offset = activeEl.offsetTop
+               + activeEl.offsetHeight / 2
+               - windowHeight * 0.42;
+
+    // Bottom-la irundhu mela poga vida koodadhu
+    const maxOffset = Math.max(0, contentHeight - windowHeight);
+    offset = Math.min(Math.max(0, offset), maxOffset);
+
+    lyricsBox.style.transform = `translateY(-${offset}px)`;
+}
+
+function updateProgress() {
+    const pct = (audio.currentTime / audio.duration) * 100;
+
+    progressFill.style.width =
+        (Number.isFinite(pct) ? pct : 0) + "%";
+
+    currentTimeText.textContent = formatTime(audio.currentTime);
+    durationText.textContent    = formatTime(audio.duration);
+
+    updateLyrics();
+}
+
+/* ---------------- controls ---------------- */
+
+function togglePlay() {
+    if (audio.paused) {
+        audio.play().catch(() => {
+            statusEl.textContent = "NO FILE";
+        });
+    } else {
+        audio.pause();
+    }
+}
+
+function seekBy(seconds) {
+    if (!Number.isFinite(audio.duration)) return;
+    audio.currentTime = Math.min(
+        Math.max(0, audio.currentTime + seconds),
+        audio.duration
+    );
+}
+
+function nextLine() {
+    const cur = audio.currentTime;
+    const next = lyricsData.find(item => item.time > cur + 1);
+    if (next) audio.currentTime = next.time + LYRICS_OFFSET;
+}
+
+function previousLine() {
+    const cur = audio.currentTime - LYRICS_OFFSET;
+
+    const prev = [...lyricsData]
+        .reverse()
+        .find(item => item.time < cur - 2);
+
+    audio.currentTime = prev ? prev.time + LYRICS_OFFSET : 0;
+}
+
+/* ---- MIDDLE BUTTON = PLAY / PAUSE ---- */
+navOk.addEventListener("click", togglePlay);
+
+navUp.addEventListener("click", previousLine);
+navDown.addEventListener("click", nextLine);
+navLeft.addEventListener("click", () => seekBy(-5));
+navRight.addEventListener("click", () => seekBy(5));
+
+callBtn.addEventListener("click", () => {
+    audio.currentTime = 0;
+    audio.play().catch(() => {
+        statusEl.textContent = "NO FILE";
+    });
+});
+
+endBtn.addEventListener("click", () => {
+    audio.pause();
+    audio.currentTime = 0;
+    statusEl.textContent = "STOPPED";
+});
+
+/* Spacebar also toggles play */
+document.addEventListener("keydown", (e) => {
+    if (e.code === "Space") {
+        e.preventDefault();
+        togglePlay();
+    }
+});
+
+/* ---------------- audio events ---------------- */
+
+audio.addEventListener("play", () => {
+    statusEl.textContent = "PLAYING";
+    navOk.classList.add("playing");
+});
+
+audio.addEventListener("pause", () => {
+    statusEl.textContent = "PAUSED";
+    navOk.classList.remove("playing");
+});
+
+audio.addEventListener("ended", () => {
+    statusEl.textContent = "END";
+    navOk.classList.remove("playing");
+});
+
+audio.addEventListener("loadedmetadata", () => {
+    durationText.textContent = formatTime(audio.duration);
+    updateLyrics();
+});
+
+audio.addEventListener("timeupdate", updateProgress);
+
+/* resize / font load aana appuram position recalculate */
+window.addEventListener("resize", updateLyrics);
+if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(updateLyrics);
+}
+
+/* ---------------- init ---------------- */
+
+renderLyrics();
+updateLyrics();
+</script>
+
+</body>
+</html>
